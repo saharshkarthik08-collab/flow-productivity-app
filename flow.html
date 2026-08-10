@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Flow Productivity</title>
+
+  <style>
+    /* ---------- Base ---------- */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* ---------- Layout ---------- */
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      padding: 28px 18px;
+      background: #111827;
+      color: white;
+    }
+
+    .logo {
+      margin: 0 0 36px 10px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .main {
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 34px;
+    }
+
+    /* ---------- Navigation ---------- */
+
+    .nav-button {
+      width: 100%;
+      margin: 3px 0;
+      padding: 12px 14px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: transparent;
+      color: #aeb7c8;
+
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .nav-button:hover,
+    .nav-button.active {
+      background: #202a3d;
+      color: white;
+    }
+
+    /* ---------- Header ---------- */
+
+    .header {
+      margin-bottom: 28px;
+    }
+
+    .date {
+      color: #78839a;
+      font-size: 14px;
+    }
+
+    .header h1 {
+      margin: 4px 0 0;
+      font-size: 30px;
+    }
+
+    /* ---------- Cards ---------- */
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      padding: 22px;
+
+      border: 1px solid #e7eaf0;
+      border-radius: 16px;
+
+      background: white;
+      box-shadow: 0 8px 30px rgba(20, 30, 50, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 18px;
+      font-size: 17px;
+    }
+
+    /* ---------- Task Input ---------- */
+
+    .add-task {
+      display: flex;
+      gap: 9px;
+      margin-bottom: 16px;
+    }
+
+    .add-task input {
+      flex: 1;
+      padding: 11px 12px;
+
+      border: 1px solid #dfe4ec;
+      border-radius: 10px;
+
+      outline: none;
+    }
+
+    .add-task input:focus {
+      border-color: #5b5ce2;
+    }
+
+    .primary-button {
+      padding: 10px 15px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #5b5ce2;
+      color: white;
+      font-weight: 700;
+    }
+
+    .primary-button:hover {
+      background: #4c4dd0;
+    }
+
+    /* ---------- Tasks ---------- */
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      padding: 12px 0;
+
+      border-bottom: 1px solid #eef0f4;
+    }
+
+    .task:last-child {
+      border-bottom: 0;
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: #5b5ce2;
+    }
+
+    .task.done span {
+      color: #9aa3b2;
+      text-decoration: line-through;
+    }
+
+    .delete-button {
+      margin-left: auto;
+
+      border: 0;
+      background: transparent;
+
+      color: #a1a8b5;
+      font-size: 18px;
+    }
+
+    .delete-button:hover {
+      color: #ef4444;
+    }
+
+    .empty {
+      padding: 15px;
+
+      color: #9aa3b2;
+      text-align: center;
+    }
+
+    /* ---------- Statistics ---------- */
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 15px;
+      border-radius: 12px;
+      background: #f7f8fc;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 25px;
+    }
+
+    .stat small {
+      color: #7c8799;
+    }
+
+    /* ---------- Progress ---------- */
+
+    .progress {
+      height: 9px;
+      margin-top: 20px;
+
+      overflow: hidden;
+
+      border-radius: 99px;
+      background: #edf0f5;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+
+      background: #5b5ce2;
+
+      transition: 0.3s;
+    }
+
+    .small-text {
+      margin-top: 9px;
+      color: #7c8799;
+      font-size: 13px;
+    }
+
+    /* ---------- Timer ---------- */
+
+    .timer {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .clock {
+      margin: 14px 0;
+
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .timer button {
+      margin: 4px;
+    }
+
+    /* ---------- Notes ---------- */
+
+    .notes textarea {
+      width: 100%;
+      height: 150px;
+
+      padding: 12px;
+
+      border: 1px solid #e0e4eb;
+      border-radius: 10px;
+
+      resize: vertical;
+      outline: none;
+    }
+
+    .notes textarea:focus {
+      border-color: #5b5ce2;
+    }
+
+    /* ---------- Focus Goal ---------- */
+
+    .focus-goal {
+      margin-top: 20px;
+    }
+
+    .focus-goal input {
+      width: 100%;
+      padding: 10px 0;
+
+      border: 0;
+      border-bottom: 1px solid #e2e6ed;
+
+      outline: none;
+      font-size: 18px;
+    }
+
+    /* ---------- Page Switching ---------- */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ---------- Responsive ---------- */
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 72px;
+      }
+
+      .logo {
+        font-size: 0;
+      }
+
+      .logo::after {
+        content: "F";
+        font-size: 22px;
+      }
+
+      .nav-button {
+        font-size: 0;
+        text-align: center;
+      }
+
+      .nav-button::before {
+        content: "•";
+        font-size: 20px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+      <div class="logo">
+        Flow
+      </div>
+
+      <nav>
+        <button
+          class="nav-button active"
+          onclick="showPage('dashboard', this)"
+        >
+          Dashboard
+        </button>
+
+        <button
+          class="nav-button"
+          onclick="showPage('tasks', this)"
+        >
+          Tasks
+        </button>
+
+        <button
+          class="nav-button"
+          onclick="showPage('focus', this)"
+        >
+          Focus
+        </button>
+
+        <button
+          class="nav-button"
+          onclick="showPage('notes', this)"
+        >
+          Notes
+        </button>
+      </nav>
+
+    </aside>
+
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+      <header class="header">
+
+        <div
+          class="date"
+          id="date"
+        ></div>
+
+        <h1 id="greeting">
+          Good evening.
+        </h1>
+
+      </header>
+
+
+      <!-- Dashboard -->
+
+      <section
+        id="dashboard"
+        class="page active"
+      >
+
+        <div class="grid">
+
+          <!-- Tasks -->
+
+          <div class="card">
+
+            <h2>
+              Today's tasks
+            </h2>
+
+            <div class="add-task">
+
+              <input
+                id="taskInput"
+                type="text"
+                placeholder="Add a task..."
+              >
+
+              <button
+                class="primary-button"
+                onclick="addTask('taskInput')"
+              >
+                Add
+              </button>
+
+            </div>
+
+            <div id="taskList"></div>
+
+          </div>
+
+
+          <!-- Right Column -->
+
+          <div>
+
+            <!-- Progress -->
+
+            <div class="card">
+
+              <h2>
+                Progress
+              </h2>
+
+              <div class="stats">
+
+                <div class="stat">
+                  <strong id="totalTasks">
+                    0
+                  </strong>
+
+                  <small>
+                    Total tasks
+                  </small>
+                </div>
+
+                <div class="stat">
+                  <strong id="completedTasks">
+                    0
+                  </strong>
+
+                  <small>
+                    Completed
+                  </small>
+                </div>
+
+              </div>
+
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  id="progressBar"
+                ></div>
+              </div>
+
+              <div
+                class="small-text"
+                id="progressText"
+              >
+                0% complete
+              </div>
+
+            </div>
+
+
+            <!-- Timer -->
+
+            <div class="card timer">
+
+              <h2>
+                Focus timer
+              </h2>
+
+              <div
+                class="clock"
+                id="clock"
+              >
+                25:00
+              </div>
+
+              <button
+                class="primary-button"
+                id="timerButton"
+                onclick="toggleTimer()"
+              >
+                Start
+              </button>
+
+              <button
+                class="primary-button"
+                onclick="resetTimer()"
+              >
+                Reset
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Tasks Page -->
+
+      <section
+        id="tasks"
+        class="page"
+      >
+
+        <div class="card">
+
+          <h2>
+            Task Manager
+          </h2>
+
+          <div class="add-task">
+
+            <input
+              id="taskInput2"
+              type="text"
+              placeholder="Add a task..."
+            >
+
+            <button
+              class="primary-button"
+              onclick="addTask('taskInput2')"
+            >
+              Add
+            </button>
+
+          </div>
+
+          <div id="taskList2"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Focus Page -->
+
+      <section
+        id="focus"
+        class="page"
+      >
+
+        <div class="card timer">
+
+          <h2>
+            Deep Work
+          </h2>
+
+          <p class="small-text">
+            Focus on one thing and ignore everything else.
+          </p>
+
+          <div
+            class="clock"
+            id="clock2"
+          >
+            25:00
+          </div>
+
+          <button
+            class="primary-button"
+            onclick="toggleTimer()"
+          >
+            Start / Pause
+          </button>
+
+          <button
+            class="primary-button"
+            onclick="resetTimer()"
+          >
+            Reset
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- Notes Page -->
+
+      <section
+        id="notes"
+        class="page"
+      >
+
+        <div class="card notes">
+
+          <h2>
+            Quick Notes
+          </h2>
+
+          <textarea
+            id="notesBox"
+            placeholder="Write anything you want to remember..."
+          ></textarea>
+
+          <div class="small-text">
+            Saved automatically in your browser.
+          </div>
+
+        </div>
+
+
+        <div class="card focus-goal">
+
+          <h2>
+            One Thing To Focus On
+          </h2>
+
+          <input
+            id="focusBox"
+            type="text"
+            placeholder="What matters most today?"
+          >
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <script>
+
+    /* ---------- Data ---------- */
+
+    let tasks = JSON.parse(
+      localStorage.getItem("flowTasks") || "[]"
+    );
+
+    let seconds = 1500;
+    let timerRunning = false;
+    let timerInterval = null;
+
+
+    /* ---------- Helper ---------- */
+
+    const $ = (id) => document.getElementById(id);
+
+
+    /* ---------- Greeting ---------- */
+
+    const now = new Date();
+    const hour = now.getHours();
+
+    $("date").textContent = now.toLocaleDateString(
+      undefined,
+      {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+      }
+    );
+
+    $("greeting").textContent =
+      "Good " +
+      (
+        hour < 12
+          ? "morning"
+          : hour < 18
+            ? "afternoon"
+            : "evening"
+      ) +
+      ".";
+
+
+    /* ---------- Tasks ---------- */
+
+    function saveTasks() {
+      localStorage.setItem(
+        "flowTasks",
+        JSON.stringify(tasks)
+      );
+    }
+
+
+    function escapeHtml(text) {
+      const characters = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return text.replace(
+        /[&<>"']/g,
+        (character) => characters[character]
+      );
+    }
+
+
+    function renderTasks() {
+
+      const taskMarkup = tasks.length
+
+        ? tasks.map((task, index) => `
+
+            <div class="task ${task.done ? "done" : ""}">
+
+              <input
+                class="task-checkbox"
+                type="checkbox"
+                ${task.done ? "checked" : ""}
+                onchange="toggleTask(${index})"
+              >
+
+              <span>
+                ${escapeHtml(task.text)}
+              </span>
+
+              <button
+                class="delete-button"
+                onclick="deleteTask(${index})"
+              >
+                ×
+              </button>
+
+            </div>
+
+          `).join("")
+
+        : `
+          <div class="empty">
+            No tasks yet.
+          </div>
+        `;
+
+
+      $("taskList").innerHTML = taskMarkup;
+      $("taskList2").innerHTML = taskMarkup;
+
+      updateProgress();
+    }
+
+
+    function addTask(inputId) {
+
+      const input = $(inputId);
+      const text = input.value.trim();
+
+      if (!text) {
+        return;
+      }
+
+      tasks.push({
+        text: text,
+        done: false
+      });
+
+      input.value = "";
+
+      saveTasks();
+      renderTasks();
+    }
+
+
+    function toggleTask(index) {
+
+      tasks[index].done =
+        !tasks[index].done;
+
+      saveTasks();
+      renderTasks();
+    }
+
+
+    function deleteTask(index) {
+
+      tasks.splice(index, 1);
+
+      saveTasks();
+      renderTasks();
+    }
+
+
+    /* ---------- Progress ---------- */
+
+    function updateProgress() {
+
+      const total = tasks.length;
+
+      const completed =
+        tasks.filter(task => task.done).length;
+
+      const percent =
+        total === 0
+          ? 0
+          : Math.round(
+              (completed / total) * 100
+            );
+
+
+      $("totalTasks").textContent = total;
+
+      $("completedTasks").textContent =
+        completed;
+
+      $("progressBar").style.width =
+        `${percent}%`;
+
+      $("progressText").textContent =
+        `${percent}% complete`;
+    }
+
+
+    /* ---------- Page Navigation ---------- */
+
+    function showPage(pageId, button) {
+
+      document
+        .querySelectorAll(".page")
+        .forEach(page => {
+          page.classList.remove("active");
+        });
+
+
+      $(pageId).classList.add("active");
+
+
+      document
+        .querySelectorAll(".nav-button")
+        .forEach(navButton => {
+          navButton.classList.remove("active");
+        });
+
+
+      button.classList.add("active");
+    }
+
+
+    /* ---------- Timer ---------- */
+
+    function updateClock() {
+
+      const minutes =
+        Math.floor(seconds / 60);
+
+      const remainingSeconds =
+        seconds % 60;
+
+
+      const time =
+        `${String(minutes).padStart(2, "0")}:` +
+        `${String(remainingSeconds).padStart(2, "0")}`;
+
+
+      $("clock").textContent = time;
+      $("clock2").textContent = time;
+
+
+      if (seconds === 0) {
+
+        clearInterval(timerInterval);
+
+        timerRunning = false;
+
+        $("timerButton").textContent =
+          "Start";
+
+        alert(
+          "Focus session complete!"
+        );
+      }
+    }
+
+
+    function toggleTimer() {
+
+      timerRunning = !timerRunning;
+
+
+      if (timerRunning) {
+
+        timerInterval = setInterval(() => {
+
+          seconds--;
+
+          updateClock();
+
+          if (seconds <= 0) {
+            timerRunning = false;
+          }
+
+        }, 1000);
+
+      } else {
+
+        clearInterval(timerInterval);
+      }
+
+
+      $("timerButton").textContent =
+        timerRunning
+          ? "Pause"
+          : "Start";
+    }
+
+
+    function resetTimer() {
+
+      clearInterval(timerInterval);
+
+      timerRunning = false;
+      seconds = 1500;
+
+      updateClock();
+
+      $("timerButton").textContent =
+        "Start";
+    }
+
+
+    /* ---------- Notes ---------- */
+
+    const notesBox = $("notesBox");
+    const focusBox = $("focusBox");
+
+
+    notesBox.value =
+      localStorage.getItem("flowNotes") || "";
+
+
+    focusBox.value =
+      localStorage.getItem("flowFocus") || "";
+
+
+    notesBox.addEventListener(
+      "input",
+      (event) => {
+
+        localStorage.setItem(
+          "flowNotes",
+          event.target.value
+        );
+
+      }
+    );
+
+
+    focusBox.addEventListener(
+      "input",
+      (event) => {
+
+        localStorage.setItem(
+          "flowFocus",
+          event.target.value
+        );
+
+      }
+    );
+
+
+    /* ---------- Keyboard Shortcuts ---------- */
+
+    $("taskInput").addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Enter") {
+          addTask("taskInput");
+        }
+
+      }
+    );
+
+
+    $("taskInput2").addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Enter") {
+          addTask("taskInput2");
+        }
+
+      }
+    );
+
+
+    /* ---------- Start App ---------- */
+
+    renderTasks();
+    updateClock();
+
+  </script>
+
+</body>
+
+</html>
