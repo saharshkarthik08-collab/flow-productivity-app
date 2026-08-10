@@ -16,7 +16,6 @@ A simple, sleek productivity app made with plain HTML, CSS and JavaScript.
 
 ## Run
 1.paste this link to your browser:   https://2qtd03fw-5500.asse.devtunnels.ms/
-
 2.Click continue
 
 
